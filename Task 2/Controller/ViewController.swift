@@ -17,6 +17,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	
 	let endpoint = "https://jsonplaceholder.typicode.com/posts"
 	var itemsList: [[String:Any]] = []
+	let refreshControl = UIRefreshControl()
 	
 	// MARK: Lifecycle Functions
 	
@@ -25,6 +26,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 		
 		// Make the API request
 		loadDataFromAPI()
+		
+		// Add Refresh Control to Table View
+		if #available(iOS 10.0, *) {
+			tableView.refreshControl = refreshControl
+		} else {
+			tableView.addSubview(refreshControl)
+		}
+		// Configure Refresh Control
+		refreshControl.addTarget(self, action: #selector(loadDataFromAPI), for: .valueChanged)
+		refreshControl.tintColor = UIColor(red:0.25, green:0.72, blue:0.85, alpha:1.0)
+		refreshControl.attributedTitle = NSAttributedString(string: "Fetching List Data ...")
+
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -43,7 +56,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	
 	// MARK: Data Functions
 	
-	func loadDataFromAPI() {
+	@objc func loadDataFromAPI() {
 		// Use Alamofire to make the request
 		AF.request(endpoint).validate().responseJSON { response in
 			switch response.result {
@@ -52,6 +65,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 				self.itemsList = listItems as! [[String:Any]]
 				// Update the UI
 				self.tableView.reloadData()
+				self.refreshControl.endRefreshing()
 			case .failure(let error):
 				print(error)
 			}
