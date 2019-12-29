@@ -19,6 +19,7 @@ class DetailViewController: UIViewController {
 	var selectedCell: Int?
 	var selectedCellTitle: String?
 	var selectedCellBody: String?
+	var defaultTextViewColor: UIColor?
 	
 	// MARK: Lifecycle Functions
 
@@ -28,15 +29,19 @@ class DetailViewController: UIViewController {
 		titleTextView.delegate = self
 		bodyTextView.delegate = self
 		
+		defaultTextViewColor = titleTextView.textColor
+		
 		// Style the textviews
 		titleTextView.layer.borderColor = UIColor.gray.cgColor
 		titleTextView.layer.borderWidth = 1.0
 		titleTextView.layer.cornerRadius = 8
 		titleTextView.textContainer.maximumNumberOfLines = 2
 		titleTextView.textContainer.lineBreakMode = .byWordWrapping
+		titleTextView.textColor = .lightGray
 		bodyTextView.layer.borderColor = UIColor.gray.cgColor
 		bodyTextView.layer.borderWidth = 1.0
 		bodyTextView.layer.cornerRadius = 8
+		bodyTextView.textColor = .lightGray
 		
 		// Display text if an item is selected from the parentVC
 		if let title = selectedCellTitle, let body = selectedCellBody {
@@ -88,10 +93,24 @@ extension DetailViewController: UITextViewDelegate {
 	
 	func textViewDidBeginEditing(_ textView: UITextView) {
 		textView.layer.borderColor = UIColor.green.cgColor
+		// Set placeholder text
+		if textView.text == "Enter text for title" || textView.text == "Enter text for body" {
+			textView.text = ""
+			textView.textColor = defaultTextViewColor
+		}
 	}
 	
 	func textViewDidEndEditing(_ textView: UITextView) {
 		textView.layer.borderColor = UIColor.gray.cgColor
+		// Set placeholder text
+		if textView.text == "" {
+			if textView == defaultTextViewColor {
+				textView.text = "Enter text for title"
+			} else {
+				textView.text = "Enter text for body"
+			}
+			textView.textColor = .lightGray
+		}
 	}
 	
 }
