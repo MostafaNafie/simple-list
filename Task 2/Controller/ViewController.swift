@@ -76,5 +76,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 		return cell
 	}
 	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let detailVC = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+		detailVC.navigationItem.title = "Update Item"
+		detailVC.parentVC = self
+		detailVC.selectedCell = indexPath.item
+		detailVC.selectedCellTitle = itemsList[indexPath.item]["title"] as? String
+		detailVC.selectedCellBody = itemsList[indexPath.item]["body"] as? String
+		
+		navigationController?.pushViewController(detailVC, animated: true)
+	}
+	
 }
 

@@ -16,6 +16,9 @@ class DetailViewController: UIViewController {
 	@IBOutlet weak var bodyTextView: UITextView!
 	
 	var parentVC: ViewController?
+	var selectedCell: Int?
+	var selectedCellTitle: String?
+	var selectedCellBody: String?
 	
 	// MARK: Lifecycle Functions
 
@@ -31,14 +34,20 @@ class DetailViewController: UIViewController {
 		bodyTextView.layer.borderColor = UIColor.gray.cgColor
 		bodyTextView.layer.borderWidth = 1.0
 		bodyTextView.layer.cornerRadius = 8
-		bodyTextView.textContainer.maximumNumberOfLines = 2
-		bodyTextView.textContainer.lineBreakMode = .byWordWrapping
+		
+		// Display text if an item is selected from the parentVC
+		if let title = selectedCellTitle, let body = selectedCellBody {
+			titleTextView.text = title
+			bodyTextView.text = body
+			print(body)
+		}
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		// Add item only when both textviews are edited
 		if titleTextView.text != "Title" &&
-			bodyTextView.text != "Body" {
+			bodyTextView.text != "Body" &&
+			navigationItem.title == "Add Item" {
 			let newItem = [
 				"title": titleTextView.text,
 				"body": bodyTextView.text,
@@ -48,6 +57,19 @@ class DetailViewController: UIViewController {
 			
 			let controller = UIAlertController()
 			controller.title = "Item Added Successfully"
+			parentVC!.present(controller, animated: true, completion: nil)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+				controller.dismiss(animated: true, completion: nil)
+			}
+		// Update Item if any of the textviews is edited
+		} else if (titleTextView.text != selectedCellTitle ||
+			bodyTextView.text != selectedCellBody) &&
+			navigationItem.title == "Update Item"  {
+			parentVC?.itemsList[selectedCell!]["title"] = titleTextView.text
+			parentVC?.itemsList[selectedCell!]["body"] = bodyTextView.text
+			
+			let controller = UIAlertController()
+			controller.title = "Item Updated Successfully"
 			parentVC!.present(controller, animated: true, completion: nil)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 				controller.dismiss(animated: true, completion: nil)
