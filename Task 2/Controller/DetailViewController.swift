@@ -46,14 +46,16 @@ class DetailViewController: UIViewController {
 		// Display text if an item is selected from the parentVC
 		if let title = selectedCellTitle, let body = selectedCellBody {
 			titleTextView.text = title
+			titleTextView.textColor = defaultTextViewColor
 			bodyTextView.text = body
+			bodyTextView.textColor = defaultTextViewColor
 		}
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		// Add item only when both textviews are edited
-		if titleTextView.text != "Title" &&
-			bodyTextView.text != "Body" &&
+		if (titleTextView.text != "Enter text for title" && titleTextView.text != "") &&
+			(bodyTextView.text != "Enter text for body" && bodyTextView.text != "")  &&
 			navigationItem.title == "Add Item" {
 			let newItem = [
 				"title": titleTextView.text,

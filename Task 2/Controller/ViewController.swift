@@ -24,7 +24,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		// Create an activity indicator
+		// Configure the activity indicator
 		activityIndicator.color = UIColor(red:0.25, green:0.72, blue:0.85, alpha:1.0)
 		activityIndicator.frame = CGRect(x: 0.0, y: 0.0, width: 10.0, height: 10.0)
 		activityIndicator.center = self.view.center
@@ -67,13 +67,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 				// Cast the response as an array of dictionaries
 				self.itemsList = listItems as! [[String:Any]]
 				// Update the UI
-				DispatchQueue.main.async {
-					self.tableView.reloadData()
-					self.refreshControl.endRefreshing()
-					self.activityIndicator.stopAnimating()
-				}
+				self.updateUI()
 			case .failure(let error):
 				print(error)
+			}
+		}
+	}
+	
+	func updateUI() {
+		DispatchQueue.main.async {
+			self.tableView.reloadData()
+			self.activityIndicator.stopAnimating()
+			if self.refreshControl.isRefreshing {
+				self.refreshControl.endRefreshing()
+				let controller = UIAlertController()
+				controller.title = "List Reloaded Successfully"
+				self.present(controller, animated: true, completion: nil)
+				DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+					controller.dismiss(animated: true, completion: nil)
+				}
 			}
 		}
 	}
