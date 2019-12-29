@@ -26,6 +26,8 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		self.navigationItem.largeTitleDisplayMode = .never
+		
 		titleTextView.delegate = self
 		bodyTextView.delegate = self
 		

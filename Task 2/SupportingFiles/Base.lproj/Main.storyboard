@@ -59,7 +59,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="lFC-4Y-4mK"/>
                     </view>
-                    <navigationItem key="navigationItem" title="List" id="wC1-IO-iNV">
+                    <navigationItem key="navigationItem" title="List" largeTitleDisplayMode="always" id="wC1-IO-iNV">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="g4a-zJ-cAs">
                             <connections>
                                 <action selector="addItems:" destination="jya-nA-29q" id="a30-5m-Qaj"/>
