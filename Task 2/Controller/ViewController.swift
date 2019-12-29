@@ -18,26 +18,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	let endpoint = "https://jsonplaceholder.typicode.com/posts"
 	var itemsList: [[String:Any]] = []
 	let refreshControl = UIRefreshControl()
+	let activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView(style: .large)
 	
 	// MARK: Lifecycle Functions
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		// Create an activity indicator
+		activityIndicator.color = UIColor(red:0.25, green:0.72, blue:0.85, alpha:1.0)
+		activityIndicator.frame = CGRect(x: 0.0, y: 0.0, width: 10.0, height: 10.0)
+		activityIndicator.center = self.view.center
+		self.view.addSubview(activityIndicator)
+		activityIndicator.bringSubviewToFront(self.view)
+		activityIndicator.startAnimating()
 		
 		// Make the API request
 		loadDataFromAPI()
 		
 		// Add Refresh Control to Table View
-		if #available(iOS 10.0, *) {
-			tableView.refreshControl = refreshControl
-		} else {
-			tableView.addSubview(refreshControl)
-		}
+		tableView.refreshControl = refreshControl
 		// Configure Refresh Control
 		refreshControl.addTarget(self, action: #selector(loadDataFromAPI), for: .valueChanged)
 		refreshControl.tintColor = UIColor(red:0.25, green:0.72, blue:0.85, alpha:1.0)
 		refreshControl.attributedTitle = NSAttributedString(string: "Fetching List Data ...")
-
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -64,8 +67,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 				// Cast the response as an array of dictionaries
 				self.itemsList = listItems as! [[String:Any]]
 				// Update the UI
-				self.tableView.reloadData()
-				self.refreshControl.endRefreshing()
+				DispatchQueue.main.async {
+					self.tableView.reloadData()
+					self.refreshControl.endRefreshing()
+					self.activityIndicator.stopAnimating()
+				}
 			case .failure(let error):
 				print(error)
 			}
