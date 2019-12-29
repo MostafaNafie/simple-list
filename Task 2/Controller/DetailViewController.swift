@@ -39,7 +39,6 @@ class DetailViewController: UIViewController {
 		if let title = selectedCellTitle, let body = selectedCellBody {
 			titleTextView.text = title
 			bodyTextView.text = body
-			print(body)
 		}
 	}
 	
@@ -58,7 +57,7 @@ class DetailViewController: UIViewController {
 			let controller = UIAlertController()
 			controller.title = "Item Added Successfully"
 			parentVC!.present(controller, animated: true, completion: nil)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
 				controller.dismiss(animated: true, completion: nil)
 			}
 		// Update Item if any of the textviews is edited
@@ -70,8 +69,9 @@ class DetailViewController: UIViewController {
 			
 			let controller = UIAlertController()
 			controller.title = "Item Updated Successfully"
+
 			parentVC!.present(controller, animated: true, completion: nil)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
 				controller.dismiss(animated: true, completion: nil)
 			}
 		}

@@ -87,5 +87,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 		navigationController?.pushViewController(detailVC, animated: true)
 	}
 	
+	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		return true
+	}
+	
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+		if (editingStyle == .delete) {
+			itemsList.remove(at: indexPath.item)
+			tableView.reloadData()
+			
+			let controller = UIAlertController()
+			controller.title = "Item Deleted Successfully"
+			present(controller, animated: true, completion: nil)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+				controller.dismiss(animated: true, completion: nil)
+			}
+		}
+	}
+	
 }
 
