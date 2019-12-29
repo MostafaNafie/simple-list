@@ -25,6 +25,9 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		titleTextView.delegate = self
+		bodyTextView.delegate = self
+		
 		// Style the textviews
 		titleTextView.layer.borderColor = UIColor.gray.cgColor
 		titleTextView.layer.borderWidth = 1.0
@@ -77,4 +80,18 @@ class DetailViewController: UIViewController {
 		}
 	}
 
+}
+
+// MARK: TextView Delegate
+
+extension DetailViewController: UITextViewDelegate {
+	
+	func textViewDidBeginEditing(_ textView: UITextView) {
+		textView.layer.borderColor = UIColor.green.cgColor
+	}
+	
+	func textViewDidEndEditing(_ textView: UITextView) {
+		textView.layer.borderColor = UIColor.gray.cgColor
+	}
+	
 }
