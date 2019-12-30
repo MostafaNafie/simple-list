@@ -1,10 +1,10 @@
-# APIT Technologies
+# APIT Tasks
 
 ## Task 2:
 Use Alamofire to fetch and display a JSON list.
 
 <div align="center">
-  <img src="https://j.gifs.com/Jy1x4P.gif" width="290">
+  <img src="https://user-images.githubusercontent.com/48848704/71564368-388f2900-2aa8-11ea-9b4e-fc034eb4acb5.gif" width="290">
 </div>
 
 ### Usage:
