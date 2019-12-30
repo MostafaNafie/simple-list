@@ -108,7 +108,7 @@ extension DetailViewController: UITextViewDelegate {
 		textView.layer.borderColor = UIColor.gray.cgColor
 		// Set placeholder text
 		if textView.text == "" {
-			if textView == defaultTextViewColor {
+			if textView == titleTextView {
 				textView.text = "Enter text for title"
 			} else {
 				textView.text = "Enter text for body"
