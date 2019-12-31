@@ -80,8 +80,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 			self.activityIndicator.stopAnimating()
 			if self.refreshControl.isRefreshing {
 				self.refreshControl.endRefreshing()
-				let controller = UIAlertController()
-				controller.title = "List Reloaded Successfully"
+				let controller = UIAlertController(title: "List Reloaded Successfully", message: nil, preferredStyle: .alert)
 				self.present(controller, animated: true, completion: nil)
 				DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
 					controller.dismiss(animated: true, completion: nil)
@@ -128,8 +127,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 			itemsList.remove(at: indexPath.item)
 			tableView.reloadData()
 			
-			let controller = UIAlertController()
-			controller.title = "Item Deleted Successfully"
+			let controller = UIAlertController(title: "Item Deleted Successfully", message: nil, preferredStyle: .alert)
 			present(controller, animated: true, completion: nil)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
 				controller.dismiss(animated: true, completion: nil)

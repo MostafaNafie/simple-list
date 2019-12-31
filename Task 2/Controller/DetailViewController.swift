@@ -66,8 +66,7 @@ class DetailViewController: UIViewController {
 			// Add the new item to items list
 			parentVC?.itemsList.append(newItem as [String : Any])
 			
-			let controller = UIAlertController()
-			controller.title = "Item Added Successfully"
+			let controller = UIAlertController(title: "Item Added Successfully", message: nil, preferredStyle: .alert)
 			parentVC!.present(controller, animated: true, completion: nil)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
 				controller.dismiss(animated: true, completion: nil)
@@ -79,9 +78,7 @@ class DetailViewController: UIViewController {
 			parentVC?.itemsList[selectedCell!]["title"] = titleTextView.text
 			parentVC?.itemsList[selectedCell!]["body"] = bodyTextView.text
 			
-			let controller = UIAlertController()
-			controller.title = "Item Updated Successfully"
-
+			let controller = UIAlertController(title: "Item Updated Successfully", message: nil, preferredStyle: .alert)
 			parentVC!.present(controller, animated: true, completion: nil)
 			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
 				controller.dismiss(animated: true, completion: nil)
