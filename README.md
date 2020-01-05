@@ -1,5 +1,3 @@
-# APIT Tasks
-
 ## Task 2:
 Use Alamofire to fetch and display a JSON list.
 
@@ -21,5 +19,3 @@ Use Alamofire to fetch and display a JSON list.
 
 ### Technologies used:
 - CocoaPods, Alamofire, UITableView, UIActivityIndicatorView, UIRefreshControl, UIAlertController, UITextView, and UINavigationController.
-
-### Tested on a real iPhone 6s and a simulated iPhone 11 Pro.
