@@ -22,7 +22,6 @@ class MainViewController: UIViewController {
 	}
 	
 	private let endpoint = "https://jsonplaceholder.typicode.com/posts"
-	var itemsList: [[String:Any]] = []
 	
 	// MARK:- View Lifecycle
 	
@@ -59,7 +58,7 @@ class MainViewController: UIViewController {
 			switch response.result {
 			case .success(let listItems):
 				// Cast the response as an array of dictionaries
-				self.itemsList = listItems as! [[String:Any]]
+				ItemsModel.itemsList = listItems as! [[String:Any]]
 				// Update the UI
 				self.updateUI()
 			case .failure(let error):
@@ -75,7 +74,7 @@ class MainViewController: UIViewController {
 extension MainViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return itemsList.count
+		return ItemsModel.itemsList.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -131,10 +130,10 @@ extension MainViewController {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
 		
 		// Set title and body of the cell
-		var title = itemsList[indexPath.item]["title"] as? String
+		var title = ItemsModel.itemsList[indexPath.item]["title"] as? String
 		title = String(indexPath.item + 1) + "-" + title!
 		cell.textLabel?.text = title
-		cell.detailTextLabel?.text = itemsList[indexPath.item]["body"] as? String
+		cell.detailTextLabel?.text =  ItemsModel.itemsList[indexPath.item]["body"] as? String
 		
 		return cell
 	}
@@ -155,14 +154,14 @@ extension MainViewController {
 		detailVC.navigationItem.title = "Update Item"
 		detailVC.parentVC = self
 		detailVC.selectedCell = indexPath.item
-		detailVC.selectedCellTitle = itemsList[indexPath.item]["title"] as? String
-		detailVC.selectedCellBody = itemsList[indexPath.item]["body"] as? String
+		detailVC.selectedCellTitle = ItemsModel.itemsList[indexPath.item]["title"] as? String
+		detailVC.selectedCellBody = ItemsModel.itemsList[indexPath.item]["body"] as? String
 		
 		navigationController?.pushViewController(detailVC, animated: true)
 	}
 	
 	private func deleteItem(at indexPath: IndexPath) {
-		itemsList.remove(at: indexPath.item)
+		ItemsModel.itemsList.remove(at: indexPath.item)
 		tableView.reloadData()
 	
 		presentAlertController(withTitle: "Item Deleted Successfully")

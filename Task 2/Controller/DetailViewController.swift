@@ -110,7 +110,7 @@ extension DetailViewController {
 				"body": bodyTextView.text,
 			]
 			// Add the new item to items list
-			parentVC?.itemsList.append(newItem as [String : Any])
+			ItemsModel.itemsList.append(newItem as [String : Any])
 			presentAlertController(withTitle: "Item Added Successfully")
 		}
 	}
@@ -118,8 +118,8 @@ extension DetailViewController {
 	private func updateItem() {
 		if (titleTextView.text != selectedCellTitle ||
 			bodyTextView.text != selectedCellBody) {
-			parentVC?.itemsList[selectedCell!]["title"] = titleTextView.text
-			parentVC?.itemsList[selectedCell!]["body"] = bodyTextView.text
+			ItemsModel.itemsList[selectedCell!]["title"] = titleTextView.text
+			ItemsModel.itemsList[selectedCell!]["body"] = bodyTextView.text
 			presentAlertController(withTitle: "Item Updated Successfully")
 		}
 	}
