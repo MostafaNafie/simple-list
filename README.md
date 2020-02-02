@@ -1,8 +1,8 @@
-## Task 2:
+## Simple List:
 Use Alamofire to fetch and display a JSON list.
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/48848704/71564368-388f2900-2aa8-11ea-9b4e-fc034eb4acb5.gif" width="290">
+  <img src="https://user-images.githubusercontent.com/48848704/73608849-78c65780-45d0-11ea-8054-652963b19034.gif" width="290">
 </div>
 
 ### Usage:
