@@ -10,48 +10,30 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
-	// MARK: Outlets and Properties
+	// MARK:- Outlets and Properties
 
-	@IBOutlet weak var titleTextView: UITextView!
-	@IBOutlet weak var bodyTextView: UITextView!
+	@IBOutlet weak var titleTextView: UITextView! {
+		didSet { setup(textView: titleTextView) }
+	}
 	
-	var parentVC: ViewController?
+	@IBOutlet weak var bodyTextView: UITextView! {
+		didSet { setup(textView: bodyTextView) }
+	}
+	
+	var parentVC: MainViewController?
 	var selectedCell: Int?
 	var selectedCellTitle: String?
 	var selectedCellBody: String?
-	var defaultTextViewColor: UIColor?
 	
-	// MARK: Lifecycle Functions
+	// MARK:- Lifecycle Functions
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		self.navigationItem.largeTitleDisplayMode = .never
 		
-		titleTextView.delegate = self
-		bodyTextView.delegate = self
-		
-		defaultTextViewColor = titleTextView.textColor
-		
-		// Style the textviews
-		titleTextView.layer.borderColor = UIColor.gray.cgColor
-		titleTextView.layer.borderWidth = 1.0
-		titleTextView.layer.cornerRadius = 8
-		titleTextView.textContainer.maximumNumberOfLines = 2
-		titleTextView.textContainer.lineBreakMode = .byWordWrapping
-		titleTextView.textColor = .lightGray
-		bodyTextView.layer.borderColor = UIColor.gray.cgColor
-		bodyTextView.layer.borderWidth = 1.0
-		bodyTextView.layer.cornerRadius = 8
-		bodyTextView.textColor = .lightGray
-		
 		// Display text if an item is selected from the parentVC
-		if let title = selectedCellTitle, let body = selectedCellBody {
-			titleTextView.text = title
-			titleTextView.textColor = defaultTextViewColor
-			bodyTextView.text = body
-			bodyTextView.textColor = defaultTextViewColor
-		}
+		displaySelectedItem()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -65,30 +47,21 @@ class DetailViewController: UIViewController {
 			]
 			// Add the new item to items list
 			parentVC?.itemsList.append(newItem as [String : Any])
+			presentAlertController(withTitle: "Item Added Successfully")
 			
-			let controller = UIAlertController(title: "Item Added Successfully", message: nil, preferredStyle: .alert)
-			parentVC!.present(controller, animated: true, completion: nil)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-				controller.dismiss(animated: true, completion: nil)
-			}
 		// Update Item if any of the textviews is edited
 		} else if (titleTextView.text != selectedCellTitle ||
 			bodyTextView.text != selectedCellBody) &&
 			navigationItem.title == "Update Item"  {
 			parentVC?.itemsList[selectedCell!]["title"] = titleTextView.text
 			parentVC?.itemsList[selectedCell!]["body"] = bodyTextView.text
-			
-			let controller = UIAlertController(title: "Item Updated Successfully", message: nil, preferredStyle: .alert)
-			parentVC!.present(controller, animated: true, completion: nil)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-				controller.dismiss(animated: true, completion: nil)
-			}
+			presentAlertController(withTitle: "Item Updated Successfully")
 		}
 	}
 
 }
 
-// MARK: TextView Delegate
+// MARK:- TextView Delegate
 
 extension DetailViewController: UITextViewDelegate {
 	
@@ -97,7 +70,7 @@ extension DetailViewController: UITextViewDelegate {
 		// Set placeholder text
 		if textView.text == "Enter text for title" || textView.text == "Enter text for body" {
 			textView.text = ""
-			textView.textColor = defaultTextViewColor
+			textView.textColor = .black
 		}
 	}
 	
@@ -115,3 +88,41 @@ extension DetailViewController: UITextViewDelegate {
 	}
 	
 }
+
+// MARK: - Helper Functions
+
+extension DetailViewController {
+	
+	private func setup(textView: UITextView) {
+		textView.delegate = self
+		textView.layer.borderColor = UIColor.gray.cgColor
+		textView.layer.borderWidth = 1.0
+		textView.layer.cornerRadius = 8
+		textView.textColor = .lightGray
+		
+		if textView == titleTextView {
+			textView.textContainer.maximumNumberOfLines = 2
+			textView.textContainer.lineBreakMode = .byWordWrapping
+		}
+
+	}
+	
+	private func displaySelectedItem() {
+		if let title = selectedCellTitle, let body = selectedCellBody {
+			titleTextView.text = title
+			titleTextView.textColor = UIColor.black
+			bodyTextView.text = body
+			bodyTextView.textColor = UIColor.black
+		}
+	}
+	
+	private func presentAlertController(withTitle title: String) {
+		let controller = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+		parentVC!.present(controller, animated: true, completion: nil)
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+			controller.dismiss(animated: true, completion: nil)
+		}
+	}
+	
+}
+

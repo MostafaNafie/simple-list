@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  Task 2
 //
 //  Created by Mustafa on 29/12/19.
@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
 	
 	// MARK:- Outlets and Properties
 	
@@ -72,7 +72,7 @@ class ViewController: UIViewController {
 
 // MARK: - TableView DataSource
 
-extension ViewController: UITableViewDataSource {
+extension MainViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return itemsList.count
@@ -90,7 +90,7 @@ extension ViewController: UITableViewDataSource {
 
 // MARK: - TableView Delegate
 
-extension ViewController: UITableViewDelegate {
+extension MainViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		updateItem(at: indexPath)
@@ -104,7 +104,7 @@ extension ViewController: UITableViewDelegate {
 
 // MARK: - Helper Functions
 
-extension ViewController {
+extension MainViewController {
 	
 	private func setup(activityIndicator: UIActivityIndicatorView) {
 		activityIndicator.style = .large
@@ -145,11 +145,7 @@ extension ViewController {
 			self.activityIndicator.stopAnimating()
 			if self.tableView.refreshControl!.isRefreshing {
 				self.tableView.refreshControl!.endRefreshing()
-				let controller = UIAlertController(title: "List Reloaded Successfully", message: nil, preferredStyle: .alert)
-				self.present(controller, animated: true, completion: nil)
-				DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-					controller.dismiss(animated: true, completion: nil)
-				}
+				self.presentAlertController(withTitle: "List Reloaded Successfully")
 			}
 		}
 	}
@@ -168,8 +164,12 @@ extension ViewController {
 	private func deleteItem(at indexPath: IndexPath) {
 		itemsList.remove(at: indexPath.item)
 		tableView.reloadData()
-		
-		let controller = UIAlertController(title: "Item Deleted Successfully", message: nil, preferredStyle: .alert)
+	
+		presentAlertController(withTitle: "Item Deleted Successfully")
+	}
+	
+	private func presentAlertController(withTitle title: String) {
+		let controller = UIAlertController(title: title, message: nil, preferredStyle: .alert)
 		present(controller, animated: true, completion: nil)
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
 			controller.dismiss(animated: true, completion: nil)
