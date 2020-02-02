@@ -24,7 +24,7 @@ class MainViewController: UIViewController {
 	private let endpoint = "https://jsonplaceholder.typicode.com/posts"
 	var itemsList: [[String:Any]] = []
 	
-	// MARK:- Lifecycle Functions
+	// MARK:- View Lifecycle
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -51,7 +51,7 @@ class MainViewController: UIViewController {
 		navigationController?.pushViewController(detailVC, animated: true)
 	}
 	
-	// MARK:- Data Functions
+	// MARK:- Network Functions
 	
 	@objc func loadDataFromAPI() {
 		// Use Alamofire to make the request
