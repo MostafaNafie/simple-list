@@ -41,21 +41,13 @@ class DetailViewController: UIViewController {
 		if (titleTextView.text != "Enter text for title" && titleTextView.text != "") &&
 			(bodyTextView.text != "Enter text for body" && bodyTextView.text != "")  &&
 			navigationItem.title == "Add Item" {
-			let newItem = [
-				"title": titleTextView.text,
-				"body": bodyTextView.text,
-			]
-			// Add the new item to items list
-			parentVC?.itemsList.append(newItem as [String : Any])
-			presentAlertController(withTitle: "Item Added Successfully")
+			addItem()
 			
 		// Update Item if any of the textviews is edited
 		} else if (titleTextView.text != selectedCellTitle ||
 			bodyTextView.text != selectedCellBody) &&
 			navigationItem.title == "Update Item"  {
-			parentVC?.itemsList[selectedCell!]["title"] = titleTextView.text
-			parentVC?.itemsList[selectedCell!]["body"] = bodyTextView.text
-			presentAlertController(withTitle: "Item Updated Successfully")
+			updateItem()
 		}
 	}
 
@@ -114,6 +106,22 @@ extension DetailViewController {
 			bodyTextView.text = body
 			bodyTextView.textColor = UIColor.black
 		}
+	}
+	
+	private func addItem() {
+		let newItem = [
+			"title": titleTextView.text,
+			"body": bodyTextView.text,
+		]
+		// Add the new item to items list
+		parentVC?.itemsList.append(newItem as [String : Any])
+		presentAlertController(withTitle: "Item Added Successfully")
+	}
+	
+	private func updateItem() {
+		parentVC?.itemsList[selectedCell!]["title"] = titleTextView.text
+		parentVC?.itemsList[selectedCell!]["body"] = bodyTextView.text
+		presentAlertController(withTitle: "Item Updated Successfully")
 	}
 	
 	private func presentAlertController(withTitle title: String) {
