@@ -9,45 +9,39 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController {
 	
-	// MARK: Outlets and Properties
+	// MARK:- Outlets and Properties
 	
-	@IBOutlet weak var tableView: UITableView!
+	@IBOutlet weak var tableView: UITableView! {
+		didSet { addRefreshControl(to: tableView) }
+	}
 	
-	let endpoint = "https://jsonplaceholder.typicode.com/posts"
+	private var activityIndicator:UIActivityIndicatorView! {
+		didSet { setup(activityIndicator: activityIndicator) }
+	}
+	
+	private let endpoint = "https://jsonplaceholder.typicode.com/posts"
 	var itemsList: [[String:Any]] = []
-	let refreshControl = UIRefreshControl()
-	let activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView(style: .large)
 	
-	// MARK: Lifecycle Functions
+	// MARK:- Lifecycle Functions
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		// Configure the activity indicator
-		activityIndicator.color = UIColor(red:0.25, green:0.72, blue:0.85, alpha:1.0)
-		activityIndicator.frame = CGRect(x: 0.0, y: 0.0, width: 10.0, height: 10.0)
-		activityIndicator.center = self.view.center
-		self.view.addSubview(activityIndicator)
-		activityIndicator.bringSubviewToFront(self.view)
-		activityIndicator.startAnimating()
+		// Initialize the activity indicator
+		activityIndicator = UIActivityIndicatorView()
 		
 		// Make the API request
 		loadDataFromAPI()
 		
-		// Add Refresh Control to Table View
-		tableView.refreshControl = refreshControl
-		// Configure Refresh Control
-		refreshControl.addTarget(self, action: #selector(loadDataFromAPI), for: .valueChanged)
-		refreshControl.tintColor = UIColor(red:0.25, green:0.72, blue:0.85, alpha:1.0)
-		refreshControl.attributedTitle = NSAttributedString(string: "Fetching List Data ...")
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		tableView.reloadData()
 	}
 	
-	// MARK: Actions
+	// MARK:- Actions
 	
 	@IBAction func addItems(_ sender: Any) {
 		let detailVC = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
@@ -57,7 +51,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 		navigationController?.pushViewController(detailVC, animated: true)
 	}
 	
-	// MARK: Data Functions
+	// MARK:- Data Functions
 	
 	@objc func loadDataFromAPI() {
 		// Use Alamofire to make the request
@@ -74,28 +68,66 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 		}
 	}
 	
-	func updateUI() {
-		DispatchQueue.main.async {
-			self.tableView.reloadData()
-			self.activityIndicator.stopAnimating()
-			if self.refreshControl.isRefreshing {
-				self.refreshControl.endRefreshing()
-				let controller = UIAlertController(title: "List Reloaded Successfully", message: nil, preferredStyle: .alert)
-				self.present(controller, animated: true, completion: nil)
-				DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-					controller.dismiss(animated: true, completion: nil)
-				}
-			}
-		}
-	}
-	
-	// MARK: TableView Functions
+}
+
+// MARK: - TableView DataSource
+
+extension ViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return itemsList.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		return setupCell(in: tableView, at: indexPath)
+	}
+	
+	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		return true
+	}
+	
+}
+
+// MARK: - TableView Delegate
+
+extension ViewController: UITableViewDelegate {
+	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		updateItem(at: indexPath)
+	}
+	
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+		if (editingStyle == .delete) { deleteItem(at: indexPath) }
+	}
+	
+}
+
+// MARK: - Helper Functions
+
+extension ViewController {
+	
+	private func setup(activityIndicator: UIActivityIndicatorView) {
+		activityIndicator.style = .large
+		activityIndicator.color = UIColor(red:0.25, green:0.72, blue:0.85, alpha:1.0)
+		activityIndicator.frame = CGRect(x: 0.0, y: 0.0, width: 10.0, height: 10.0)
+		activityIndicator.center = self.view.center
+		self.view.addSubview(activityIndicator)
+		activityIndicator.bringSubviewToFront(self.view)
+		activityIndicator.startAnimating()
+	}
+	
+	private func addRefreshControl(to tableView: UITableView) {
+		// Initialize the Refresh Control
+		let refreshControl = UIRefreshControl()
+		// Add Refresh Control to Table View
+		tableView.refreshControl = refreshControl
+		// Configure Refresh Control
+		refreshControl.addTarget(self, action: #selector(loadDataFromAPI), for: .valueChanged)
+		refreshControl.tintColor = UIColor(red:0.25, green:0.72, blue:0.85, alpha:1.0)
+		refreshControl.attributedTitle = NSAttributedString(string: "Fetching List Data ...")
+	}
+	
+	private func setupCell(in tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")!
 		
 		// Set title and body of the cell
@@ -107,7 +139,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 		return cell
 	}
 	
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	func updateUI() {
+		DispatchQueue.main.async {
+			self.tableView.reloadData()
+			self.activityIndicator.stopAnimating()
+			if self.tableView.refreshControl!.isRefreshing {
+				self.tableView.refreshControl!.endRefreshing()
+				let controller = UIAlertController(title: "List Reloaded Successfully", message: nil, preferredStyle: .alert)
+				self.present(controller, animated: true, completion: nil)
+				DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+					controller.dismiss(animated: true, completion: nil)
+				}
+			}
+		}
+	}
+	
+	private func updateItem(at indexPath: IndexPath) {
 		let detailVC = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
 		detailVC.navigationItem.title = "Update Item"
 		detailVC.parentVC = self
@@ -118,20 +165,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 		navigationController?.pushViewController(detailVC, animated: true)
 	}
 	
-	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		return true
-	}
-	
-	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-		if (editingStyle == .delete) {
-			itemsList.remove(at: indexPath.item)
-			tableView.reloadData()
-			
-			let controller = UIAlertController(title: "Item Deleted Successfully", message: nil, preferredStyle: .alert)
-			present(controller, animated: true, completion: nil)
-			DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-				controller.dismiss(animated: true, completion: nil)
-			}
+	private func deleteItem(at indexPath: IndexPath) {
+		itemsList.remove(at: indexPath.item)
+		tableView.reloadData()
+		
+		let controller = UIAlertController(title: "Item Deleted Successfully", message: nil, preferredStyle: .alert)
+		present(controller, animated: true, completion: nil)
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+			controller.dismiss(animated: true, completion: nil)
 		}
 	}
 	
