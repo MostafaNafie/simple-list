@@ -13,14 +13,9 @@ class MainViewController: UIViewController {
 	
 	// MARK:- Outlets and Properties
 	
-	@IBOutlet weak var tableView: UITableView! {
-		didSet { addRefreshControl(to: tableView) }
-	}
+	@IBOutlet weak var tableView: UITableView!
 	
-	private var activityIndicator:UIActivityIndicatorView! {
-		didSet { setup(activityIndicator: activityIndicator) }
-	}
-	
+	private var activityIndicator:UIActivityIndicatorView!
 	private let endpoint = "https://jsonplaceholder.typicode.com/posts"
 	
 	// MARK:- View Lifecycle
@@ -31,12 +26,16 @@ class MainViewController: UIViewController {
 		// Initialize the activity indicator
 		activityIndicator = UIActivityIndicatorView()
 		
+		addRefreshControl(to: tableView)
+		setup(activityIndicator: activityIndicator)
+		
 		// Make the API request
 		loadDataFromAPI()
-		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
 		tableView.reloadData()
 	}
 	

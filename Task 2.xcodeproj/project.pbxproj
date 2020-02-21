@@ -46,6 +46,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		45DD15C223FFFFF80008A545 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				45DFF9BC23B8DE93008FAFE1 /* LaunchScreen.storyboard */,
+				45DFF9B723B8DE8F008FAFE1 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		45DFF9A523B8DE8E008FAFE1 = {
 			isa = PBXGroup;
 			children = (
@@ -70,6 +79,7 @@
 				45DFF9B123B8DE8F008FAFE1 /* AppDelegate.swift */,
 				45DFF9B323B8DE8F008FAFE1 /* SceneDelegate.swift */,
 				45E4767E23E7117D00BDDD45 /* Model */,
+				45DD15C223FFFFF80008A545 /* View */,
 				45DFF9C523B8DEAB008FAFE1 /* Controller */,
 				45DFF9C623B8DECE008FAFE1 /* SupportingFiles */,
 			);
@@ -88,9 +98,7 @@
 		45DFF9C623B8DECE008FAFE1 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
-				45DFF9B723B8DE8F008FAFE1 /* Main.storyboard */,
 				45DFF9BA23B8DE93008FAFE1 /* Assets.xcassets */,
-				45DFF9BC23B8DE93008FAFE1 /* LaunchScreen.storyboard */,
 				45DFF9BF23B8DE93008FAFE1 /* Info.plist */,
 			);
 			path = SupportingFiles;

@@ -12,13 +12,8 @@ class DetailViewController: UIViewController {
 
 	// MARK:- Outlets and Properties
 
-	@IBOutlet weak var titleTextView: UITextView! {
-		didSet { setup(textView: titleTextView) }
-	}
-	
-	@IBOutlet weak var bodyTextView: UITextView! {
-		didSet { setup(textView: bodyTextView) }
-	}
+	@IBOutlet weak var titleTextView: UITextView!
+	@IBOutlet weak var bodyTextView: UITextView!
 	
 	var parentVC: MainViewController?
 	var selectedCell: Int?
@@ -32,11 +27,16 @@ class DetailViewController: UIViewController {
 		
 		self.navigationItem.largeTitleDisplayMode = .never
 		
+		setup(textView: titleTextView)
+		setup(textView: bodyTextView)
+		
 		// Display text if an item is selected from the parentVC
 		displaySelectedItem()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		
 		if navigationItem.title == "Add Item" {
 			addItem()
 		} else {
