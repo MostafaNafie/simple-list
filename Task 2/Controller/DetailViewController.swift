@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol messageDelegate {
+	func messageTitle(title: String)
+}
+
 class DetailViewController: UIViewController {
 
 	// MARK:- Outlets and Properties
@@ -15,7 +19,7 @@ class DetailViewController: UIViewController {
 	@IBOutlet weak var titleTextView: UITextView!
 	@IBOutlet weak var bodyTextView: UITextView!
 	
-	var parentVC: MainViewController?
+	var delegate: messageDelegate?
 	var selectedCell: Int?
 	var selectedCellTitle: String?
 	var selectedCellBody: String?
@@ -111,7 +115,7 @@ extension DetailViewController {
 			]
 			// Add the new item to items list
 			ItemsModel.itemsList.append(newItem as [String : Any])
-			presentAlertController(withTitle: "Item Added Successfully")
+			self.delegate?.messageTitle(title: "Item Added Successfully")
 		}
 	}
 	
@@ -120,15 +124,7 @@ extension DetailViewController {
 			bodyTextView.text != selectedCellBody) {
 			ItemsModel.itemsList[selectedCell!]["title"] = titleTextView.text
 			ItemsModel.itemsList[selectedCell!]["body"] = bodyTextView.text
-			presentAlertController(withTitle: "Item Updated Successfully")
-		}
-	}
-	
-	private func presentAlertController(withTitle title: String) {
-		let controller = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-		parentVC!.present(controller, animated: true, completion: nil)
-		DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-			controller.dismiss(animated: true, completion: nil)
+			self.delegate?.messageTitle(title: "Item Updated Successfully")
 		}
 	}
 	

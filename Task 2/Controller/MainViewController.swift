@@ -43,9 +43,8 @@ class MainViewController: UIViewController {
 	
 	@IBAction func addItems(_ sender: Any) {
 		let detailVC = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+		detailVC.delegate = self
 		detailVC.navigationItem.title = "Add Item"
-		detailVC.parentVC = self
-		
 		navigationController?.pushViewController(detailVC, animated: true)
 	}
 	
@@ -100,6 +99,14 @@ extension MainViewController: UITableViewDelegate {
 	
 }
 
+// MARK: - Message Delegate
+
+extension MainViewController: messageDelegate {
+	func messageTitle(title: String) {
+		presentAlertController(withTitle: title)
+	}
+}
+
 // MARK: - Helper Functions
 
 extension MainViewController {
@@ -150,12 +157,11 @@ extension MainViewController {
 	
 	private func updateItem(at indexPath: IndexPath) {
 		let detailVC = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+		detailVC.delegate = self
 		detailVC.navigationItem.title = "Update Item"
-		detailVC.parentVC = self
 		detailVC.selectedCell = indexPath.item
 		detailVC.selectedCellTitle = ItemsModel.itemsList[indexPath.item]["title"] as? String
 		detailVC.selectedCellBody = ItemsModel.itemsList[indexPath.item]["body"] as? String
-		
 		navigationController?.pushViewController(detailVC, animated: true)
 	}
 	
